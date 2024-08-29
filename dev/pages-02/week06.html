@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <!-- Modular Head -->
+  <div id="HTMLhead-container"></div>
+  <script src="../components/head.js"></script>
+  <script>
+    const collection = "tekisusu_2024-08-12-week06";
+  </script>
+</head>
+
+<body>
+  <!-- Header-Menu -->
+  <header>
+    <h4>Desarrollador (Ambiente de Prueba)</h4>
+  </header>
+
+  <!-- Sticky Form -->
+  <section class="title display-flex-center">
+    <div class="title-container display-center">
+      <!-- Pagination -->
+      <div class="pagination display-flex-center">
+        <a id="scrollToBottomBtn" class="bi bi-arrow-down-square btn-arrow"></a>
+        <ul class="display-flex-center">
+          <li class="pageNumber prev-page">
+            <a href="#" id="prevPage">
+              < </a>
+          </li>
+          <li class="pageNumber next-page">
+            <a href="#" id="nextPage"> > </a>
+          </li>
+        </ul>
+
+        <select class="form-select" id="itemsPerPageSelect">
+          <option selected>Ver...</option>
+          <option value="1">1</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
+        <a id="scrollToTopBtn" class="bi bi-arrow-up-square btn-arrow"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rules -->
+  <section class="section-rules display-center">
+    <h5>Reglas, Términos & Condiciones</h5>
+    <p>
+      <strong>* Fecha: </strong>de 12 de agosto a 9 de Noviembre del 2024 <br>
+      <strong>* Administrador: </strong>Teki<br>
+      <strong>* Pagos: </strong>12.00 diario o 72.00 semanal<br>
+      <strong>* Tombola: </strong>Se hace cada sábado, para participar se debe de estar al día en los aportes <br>
+      <strong>* Compromiso: </strong> Todo integrante debe de cumplir con los pagos sin atrasos.
+    </p>
+  </section>
+
+  <!-- Middle Section -->
+  <section class="display-center">
+    <div id="middleSection" class="display-center">
+      <div class="display-flex-center">
+        <h1>Librería de Personal</h1>
+        <ion-icon name="add-circle-outline" data-bs-toggle="modal" data-bs-target="#newRegisterModal"
+          id="showModalButton"></ion-icon>
+      </div>
+
+      <!-- Search Function: Input + Button -->
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Buscar" id="searchInput" />
+        <button class="btn bg-green" type="button" id="searchButton">Buscar</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Modular - Weeks Section -->
+  <div id="week-buttons-container"></div>
+  <script src="../components/week-buttons/week-buttons.js"></script>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Main Content - Container -->
+    <div class="main-container">
+      <table id="miTabla" class="table table-striped">
+        <!-- Table - Head -->
+        <thead>
+          <tr>
+            <th class="text-center">#</th>
+            <th class="text-center" id="headerTabla">Nombre</th>
+            <th class="text-center attendance-cell">Pagos</th>
+            <th class="text-center">Lunes</th>
+            <th class="text-center">Martes</th>
+            <th class="text-center">Miercoles</th>
+            <th class="text-center">Jueves</th>
+            <th class="text-center">Viernes</th>
+            <th class="text-center">Sábado</th>
+            <th>Acciones</th>
+            <th class="text-center">userId</th>
+          </tr>
+        </thead>
+
+        <!--  Dinamic Table - Body -->
+        <tbody class="table-body" id="contenidoTabla">
+          <!-- aqui va el contenido d la tabla -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!--=== ===== Download to Excel Buttons ===== ===-->
+  <section class="display-flex-center">
+    <button class="button" id="downloadToExcel">
+      <label>Descargar a Excel</label>
+    </button>
+  </section>
+
+  <style>
+    #fileInput {
+      display: none;
+      /* Oculta el input de archivo */
+    }
+
+    #uploadButton {
+      background-color: #4CAF50;
+      /* Verde */
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    #uploadButton:hover {
+      background-color: #45a049;
+      /* Un verde un poco más oscuro */
+    }
+
+    #uploadButton:active {
+      background-color: #3e8e41;
+      /* Verde aún más oscuro al hacer clic */
+      box-shadow: 0 5px #666;
+      transform: translateY(2px);
+    }
+
+    /* Estilo para una etiqueta que simule un botón */
+    label[for="fileInput"] {
+      background-color: #008CBA;
+      /* Azul */
+      color: white;
+      padding: 12px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    label[for="fileInput"]:hover {
+      background-color: #007bb5;
+      /* Azul un poco más oscuro */
+    }
+
+    label[for="fileInput"]:active {
+      background-color: #006ba1;
+      /* Azul más oscuro al hacer clic */
+      box-shadow: 0 5px #666;
+      transform: translateY(2px);
+    }
+    .line {
+border: .1px #999 solid;
+    }
+  </style>
+
+
+
+
+
+
+  <!--=== ===== New Register Modal ===== ===-->
+  <div class="modal fade" id="newRegisterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Formulario de Registro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <form class="row g-3 needs-validation" id="registerForm" novalidate>
+            <div class="display-flex-center">
+              <div class="col-md-6 display-flex-center">
+                <label for="validationNombre" class="form-label col-6">Nombre</label>
+                <input type="text" class="form-control" id="validationNombre" placeholder="Nombre" required />
+                <div class="invalid-feedback">Por favor, ingrese Nombre.</div>
+              </div>
+
+              <div class="col-3">
+                <button class="btn btn-primary" type="submit" id="submitModalForm-btn">
+                  Agregar
+                </button>
+              </div>
+            </div>
+            <p>- Agrega uno a la vez.</p>
+          </form>
+          <div class="line"></div>
+          <footer>
+            <label for="fileInput">Seleccionar Archivo</label>
+            <input type="file" id="fileInput" accept=".xlsx" />
+            <button id="uploadButton">Cargar Datos</button>
+            <p>- Selecciona y carga un archivo excel con una lista de nombres predeterminado.</p>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- Modular - Others Scripts -->
+  <script src="../assets/js/script.js"></script>
+  <!-- Main Script -->
+  <script src="./script.js" defer type="module"></script>
+</body>
+
+<footer class="display-flex-center">
+  <p>©2024 Cloud Service</p>
+</footer>
+
+</html>

@@ -1,0 +1,23 @@
+
+/* Section Week Days Buttons */
+.week-buttons .button {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    margin: 3px;
+    padding: 0px;
+    background-color: #999;
+    font-weight: 500;
+}
+
+.week-buttons .button:hover {
+    background-color: green;
+}
+
+.week-buttons .active {
+    background-color: green;
+}
