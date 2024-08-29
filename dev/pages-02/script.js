@@ -11,6 +11,7 @@ import { updateAttendanceCounter } from "../modules/tabla/attendanceCounter.js";
 import { uploadExcelData } from '../modules/uploadExcelData.js';
 import "../modules/downloadToExcel.js";
 import "../modules/newRegister.js";
+import { includeHTML } from '../components/includeHTML/includeHTML.js';
 
 
 // Constantes y variables de estado
@@ -126,6 +127,7 @@ document.getElementById('uploadButton').addEventListener('click', () => {
 // Inicializa la tabla y eventos al cargar el documento
 document.addEventListener('DOMContentLoaded', () => {
     mostrarDatos();
+    includeHTML();
     initializeSearch(tabla);
     initScrollButtons(tabla);
     changeSemanaSelect(tabla, database, collection);

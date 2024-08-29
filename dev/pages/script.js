@@ -7,7 +7,7 @@ import { addEditEventListeners } from "../modules/tabla/editRow.js";
 import { deleteRow } from "../modules/tabla/deleteRow.js";
 import "../modules/downloadToExcel.js";
 
-import { includeHTML } from '../components/includeHTML/_includeHTML.js';
+import { includeHTML } from '../components/includeHTML/includeHTML.js';
 import { changeEstadoSelectEvent, changeRoleSelectEvent } from "../modules/tabla/changeSelectEvent.js";
 import { initializeSearch } from "../modules/searchFunction.js";
 
