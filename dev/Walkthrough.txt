@@ -1,2 +1,0 @@
-- agregar, bloquear select al actualizarse.
-- arreglar los undefined de search
