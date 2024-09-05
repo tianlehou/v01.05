@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <div id="HTMLhead-container"></div>
+  <script src="../components/head.js"></script>
+  <script> const collection = "week03";</script>
+</head>
+
+<body>
+  <!-- Modular Nav-Header -->
+  <div id="nav-header-container"></div>
+  <script src="../components/nav-header/nav-header.js"></script>
+
+  <!-- Sticky Form -->
+  <section class="title display-flex-center display-none">
+    <div class="title-container display-center">
+      <!-- Pagination -->
+      <div class="pagination display-flex-center">
+        <a id="scrollToBottomBtn" class="bi bi-arrow-down-square btn-arrow"></a>
+        <ul class="display-flex-center">
+          <li class="pageNumber prev-page">
+            <a href="#" id="prevPage"> < </a>
+          </li>
+          <li class="pageNumber next-page">
+            <a href="#" id="nextPage"> > </a>
+          </li>
+        </ul>
+
+        <select class="form-select" id="itemsPerPageSelect">
+          <option selected>Ver...</option>
+          <option value="1">1</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
+        <a id="scrollToTopBtn" class="bi bi-arrow-up-square btn-arrow"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rules -->
+  <div data-include-html="../components/includeHTML/rules.html"></div>
+
+  <!-- Middle Section -->
+  <section class="display-center">
+    <div id="middleSection" class="display-center">
+      <div class="display-flex-center">
+        <h1>Librería de Personal</h1>
+        <ion-icon name="add-circle-outline" data-bs-toggle="modal" data-bs-target="#myModal"
+          id="showModalButton"></ion-icon>
+      </div>
+
+      <!-- Search Function: Input + Button -->
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Buscar" id="searchInput" />
+        <button class="btn bg-green" type="button" id="searchButton">Buscar</button>
+      </div>
+
+    </div>
+  </section>  <!-- END - Middle Section -->
+
+  <!-- Modular - Weeks Section -->
+  <div id="week-buttons-container"></div>
+  <script src="../components/week-buttons/week-buttons.js"></script>
+
+  <!-- Modular - Main Content -->
+  <div id="main-content-container"></div>
+  <script src="../components/main-content.js"></script>
+
+  <!-- Button - Download to Excel -->
+  <section class="display-flex-center">
+    <button class="button" id="downloadToExcel">Descargar a Excel</button>
+  </section>
+
+  <!-- Modular - Register Modal -->
+  <div id="register-modal-container"></div>
+  <script src="../components/register-modal.js"></script>
+
+  <!-- Modular - Others Scripts -->
+  <script src="../assets/js/script.js"></script>
+  <!-- Main Script -->
+  <script src="./script-pages-01.js" defer type="module"></script>
+</body>
+
+<footer class="display-flex-center">
+  <p>©2024 Cloud Service</p>
+</footer>
+
+</html>
