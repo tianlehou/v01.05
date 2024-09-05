@@ -6,7 +6,7 @@
   <div id="HTMLhead-container"></div>
   <script src="../components/head.js"></script>
   <script>
-    const collection = "tekisusu_2024-08-12-week08";
+    const collection = "cobros-de-zarpe-08";
   </script>
 </head>
 
@@ -20,17 +20,15 @@
   <div id="scroll-buttons-container"></div>
   <script src="../components/scroll-buttons/scroll-buttons.js"></script>
 
-  <!-- Rules -->
-  <section class="section-rules display-center">
-    <h5>Reglas, Términos & Condiciones</h5>
-    <p>
-      <strong>* Fecha: </strong>de 12 de agosto a 9 de Noviembre del 2024 <br>
-      <strong>* Administrador: </strong>Teki<br>
-      <strong>* Pagos: </strong>12.00 diario o 72.00 semanal<br>
-      <strong>* Tombola: </strong>Se hace cada sábado, para participar se debe de estar al día en los aportes <br>
-      <strong>* Compromiso: </strong> Todo integrante debe de cumplir con los pagos sin atrasos.
-    </p>
-  </section>
+  <!-- Imagen Box -->
+  <div class="img-container display-center">
+    <div class="card-2 bg-white">
+      <img class="img" src="https://imgvb.com/images/2024/04/14/81a3769d61387909d30cbb365495f4cf.jpg" alt="img" />
+    </div>
+  </div>
+
+  <!-- Modular Rules Section -->
+  <div data-include-html="../components/includeHTML/rules.html"></div>
 
   <!-- Middle Section -->
   <section class="display-center">
@@ -41,29 +39,36 @@
           id="showModalButton"></ion-icon>
       </div>
 
-      <!-- Search Function: Input + Button -->
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Buscar" id="searchInput" />
-        <button class="btn bg-green" type="button" id="searchButton">Buscar</button>
-      </div>
 
     </div>
   </section>
 
   <!-- Modular - Months Section -->
   <div id="month-buttons-container"></div>
-  <script src="./components/month-buttons/month-buttons.js"></script>
+  <script src="./components/month-buttons.js"></script>
+  <!-- <div class="display-flex-center">
+    <div id="radio-inputs-container"></div>
+    <script src="./components/radio-inputs.js"></script>
+  </div> -->
+
+  <!-- Search Function: Input + Button -->
+  <section class="display-center">
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Buscar" id="searchInput" />
+    <button class="btn bg-green" type="button" id="searchButton">Buscar</button>
+  </div>
+</section>
 
   <!-- Modular - Main Content -->
   <div id="main-content-pages-02-container"></div>
-  <script src="../components/main-content-pages-02.js"></script>
+  <script src="./components/main-content-pages-02.js"></script>
 
   <!-- Modular - Pagination -->
   <div id="pagination-container"></div>
   <script src="../components/pagination/pagination.js"></script>
 
-   <!--=== ===== Download to Excel Buttons ===== ===-->
-   <section class="display-flex-center">
+  <!--=== ===== Download to Excel Buttons ===== ===-->
+  <section class="display-flex-center">
     <button class="button" id="downloadToExcel-pages-02">
       <label>Descargar a Excel</label>
     </button>

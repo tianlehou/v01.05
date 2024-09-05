@@ -237,10 +237,18 @@ th {
     display: inline-block;
     width: 20px;
     height: 20px;
-    background-color: green;
+    background-color: var(--secondary-color);
     border-radius: 50%;
-  }
-  
+}
+
+.luz-roja {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+}
+
 
 .section-rules p {
     margin: 10px 20px 10px 20px;
@@ -259,4 +267,3 @@ th {
 footer {
     margin: 0.5em;
 }
-

@@ -14,7 +14,7 @@ import { updatePagination, currentPage, itemsPerPage } from "../modules/paginati
 import { handleFileUpload } from '../modules/Excel/uploadExcelHandler.js';
 import "../modules/newRegister.js";
 import { includeHTML } from '../components/includeHTML/includeHTML.js';
-import { updateSelectElements } from '../modules/tabla/updateSelectElements.js'; // Importar el archivo modularizado
+import { updateSelectElements } from './modules/updateSelectElements.js';
 import "./modules/downloadToExcel.js";
 
 // Constantes y variables de estado
@@ -50,9 +50,9 @@ export function mostrarDatos() {
                             <span class="${!user[dia] ? 'invisible-value' : ''}">${user[dia] || ''}</span>
                             <select class="form-select pay-select ${["12.00", "pagado"].includes(user[dia]) ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
                                 <option value="" ${user[dia] === "" ? "selected" : ""}></option>
-                                <option value="---" ${user[dia] === "---" ? "selected" : "---"}></option>
-                                <option value="12.00" ${user[dia] === "12.00" ? "selected" : ""}>12.00</option>
-                                <option value="pagado" ${user[dia] === "pagado" ? "selected" : ""}>pagado</option>
+                                <option value="11.00" ${user[dia] === "11.00" ? "selected" : ""}>11.00</option>
+                                <option value="24.00" ${user[dia] === "24.00" ? "selected" : ""}>24.00</option>
+                                <option value="No Pagó" ${user[dia] === "No Pagó" ? "selected" : ""}>No pagó</option>
                             </select>
                         </div>
                     </td>
