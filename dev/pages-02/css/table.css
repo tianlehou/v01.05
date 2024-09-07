@@ -3,7 +3,13 @@
     display: none;
 }
 
-/* Table */
+/* Estilos de tabla */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* Permitir que la tabla ajuste el ancho según el contenido */
+}
+
 .tabla-personas tr:nth-child(even) {
     background-color: #f2f2f2;
 }
@@ -22,210 +28,19 @@ a:hover {
     color: #ff9900;
 }
 
-.table {
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-
 .flex-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* Esto ayuda a alinear los elementos verticalmente */
+    justify-content: center; /* Centra el contenido horizontalmente */
 }
 
 
-
-.pay-select {
-    width: 10px;
-}
-
-table td:nth-child(1),
-table th:nth-child(1) {
-    width: 50px;
-}
-
-table td:nth-child(2),
-table th:nth-child(2) {
-    width: 120px;
-}
-
-table td:nth-child(3),
-table th:nth-child(3) {
-    width: 120px;
-}
-
-table td:nth-child(4),
-table th:nth-child(4) {
-    width: 100px;
-}
-
-table td:nth-child(5),
-table th:nth-child(5) {
-    width: 100px;
-}
-
-table td:nth-child(6),
-table th:nth-child(6) {
-    width: 100px;
-}
-
-table td:nth-child(7),
-table th:nth-child(7) {
-    width: 100px;
-}
-
-table td:nth-child(8),
-table th:nth-child(8) {
-    width: 100px;
-}
-
-table td:nth-child(9),
-table th:nth-child(9) {
-    width: 100px;
-}
-
-table td:nth-child(10),
-table th:nth-child(10) {
-    width: 100px;
-}
-
-table td:nth-child(11),
-table th:nth-child(11) {
-    width: 100px;
-}
-
-table td:nth-child(12),
-table th:nth-child(12) {
-    width: 100px;
-}
-
-table td:nth-child(13),
-table th:nth-child(13) {
-    width: 120px;
-}
-
-table td:nth-child(14),
-table th:nth-child(14) {
-    width: 100px;
-}
-
-table td:nth-child(15),
-table th:nth-child(15) {
-    width: 100px;
-}
-
-table td:nth-child(16),
-table th:nth-child(16) {
-    width: 100px;
-}
-
-table td:nth-child(17),
-table th:nth-child(17) {
-    width: 100px;
-}
-
-table td:nth-child(18),
-table th:nth-child(18) {
-    width: 100px;
-}
-
-table td:nth-child(19),
-table th:nth-child(19) {
-    width: 100px;
-}
-
-table td:nth-child(20),
-table th:nth-child(20) {
-    width: 100px;
-}
-
-table td:nth-child(21),
-table th:nth-child(21) {
-    width: 50px;
-}
-
-table td:nth-child(22),
-table th:nth-child(22) {
-    width: 120px;
-}
-
-table td:nth-child(23),
-table th:nth-child(23) {
-    width: 120px;
-}
-
-table td:nth-child(24),
-table th:nth-child(24) {
-    width: 100px;
-}
-
-table td:nth-child(25),
-table th:nth-child(25) {
-    width: 100px;
-}
-
-table td:nth-child(26),
-table th:nth-child(26) {
-    width: 100px;
-}
-
-table td:nth-child(27),
-table th:nth-child(27) {
-    width: 100px;
-}
-
-table td:nth-child(28),
-table th:nth-child(28) {
-    width: 100px;
-}
-
-table td:nth-child(29),
-table th:nth-child(29) {
-    width: 100px;
-}
-
-table td:nth-child(30),
-table th:nth-child(30) {
-    width: 100px;
-}
-
-table td:nth-child(31),
-table th:nth-child(31) {
-    width: 100px;
-}
-
-table td:nth-child(32),
-table th:nth-child(32) {
-    width: 100px;
-}
-
-table td:nth-child(33),
-table th:nth-child(33) {
-    width: 100px;
-}
-
-table td:nth-child(34),
-table th:nth-child(34) {
-    width: 100px;
-}
-
-table td:nth-child(35),
-table th:nth-child(35) {
-    width: 120px;
-}
-
-table td:nth-child(36),
-table th:nth-child(36) {
-    width: 100px;
-}
-
-th,
-td {
+/* Ajuste de celdas: Ancho ajustado al contenido con 10px adicionales a cada lado */
+table th,
+table td {
+    padding: 8px 10px; /* Añade 10px a la izquierda y derecha del contenido */
     border: 1px solid #ddd;
-    padding: 8px;
-    color: #666;
     text-align: center;
+    white-space: nowrap; /* Evita que el contenido se divida en varias líneas */
 }
 
 th {
@@ -233,6 +48,36 @@ th {
     font-weight: 500;
 }
 
+/* Ajuste especial para la columna de nombre */
+table td.nombre-columna {
+    white-space: nowrap; /* Asegura que el contenido no se divida en varias líneas */
+    max-width: fit-content; /* Permitir que el ancho se ajuste automáticamente */
+    padding: 8px 20px; /* Añadir 20px de padding a la columna específica si se desea más espacio */
+}
+
+/* Sticky Header y primera columna */
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: #a8d5ba !important; /* Color verde suave para el encabezado */
+    color: #1d1d1b !important; /* Color del texto oscuro para que contraste con el fondo verde */
+    z-index: 2;
+}
+
+td:first-child,
+th:first-child {
+    position: sticky;
+    left: 0;
+    background-color: #a8d5ba !important; /* Color verde suave para la primera columna */
+    color: #1d1d1b !important; /* Color del texto oscuro para que contraste con el fondo verde */
+    z-index: 1;
+}
+
+th:first-child {
+    z-index: 3;
+}
+
+/* Estilo de luces */
 .luz-verde {
     display: inline-block;
     width: 20px;
@@ -249,12 +94,12 @@ th {
     border-radius: 50%;
 }
 
-
+/* Espaciado en la sección de reglas */
 .section-rules p {
-    margin: 10px 20px 10px 20px;
+    margin: 10px 20px;
 }
 
-/* Botones */
+/* Estilos de botones */
 #delete-board-button {
     background-color: red;
 }
@@ -263,7 +108,58 @@ th {
     background-color: green;
 }
 
-/* Footer*/
+/* Footer */
 footer {
     margin: 0.5em;
+}
+
+/* Estilo para fijar el thead y las primeras columnas */
+.main-container {
+    position: relative;
+    max-height: 600px;
+    overflow: auto;
+}
+
+/* Contenedor del select */
+.select-container {
+    display: inline-block;
+    /* Permite al contenedor ajustarse al contenido */
+}
+
+/* Estilo para el select */
+select {
+    max-width: 10px;
+    padding: 2px 4px;
+    /* Espaciado para mantener el estilo */
+    text-align: center;
+    /* Centra el texto dentro del select */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    /* Fondo claro */
+    font-size: 14px;
+    color: #666;
+    box-sizing: border-box;
+    /* Incluye padding y border en el ancho total */
+}
+
+/* Centra el texto dentro de las celdas y encabezados de la tabla */
+table th,
+table td {
+    text-align: center;
+    /* Centra el texto dentro de celdas y encabezados */
+    padding: 8px;
+    border: 1px solid #ddd;
+    color: #666;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: 500;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
 }

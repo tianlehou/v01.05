@@ -1,5 +1,5 @@
 export let currentPage = 1;
-export let itemsPerPage = 50; // Puedes mantener esto si lo estás usando en otro lugar
+export let itemsPerPage = 1000; // Puedes mantener esto si lo estás usando en otro lugar
 
 export function updatePagination(totalPages, mostrarDatos) {
   const paginationContainer = document.querySelector(".pagination");

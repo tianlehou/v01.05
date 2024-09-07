@@ -1,77 +1,96 @@
-// Importa las funciones `ref` y `update` desde el módulo Firebase para manipular la base de datos en tiempo real.
 import { ref, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-// Exporta la función `updateSelectElements`, que se utiliza para actualizar los elementos `select` en la tabla.
+// Función para obtener la fecha y hora en la zona horaria de Panamá.
+function getPanamaDateTime() {
+    const panamaOffset = -4;
+    const date = new Date();
+    const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+    const panamaDate = new Date(utc + (3600000 * panamaOffset));
+    return panamaDate.toLocaleString('es-PA', { timeZone: 'America/Panama' });
+}
+
+// Función para aplicar estilos según el valor de Cobro
+function applyStyles(cobroElement, selectedValue) {
+    if (selectedValue === "6.00" || selectedValue === "10.00" || selectedValue === "11.00" || selectedValue === "24.00") {
+        cobroElement.style.color = "var(--secondary-color)";
+        cobroElement.style.fontWeight = "bold";
+    } else if (selectedValue === "No Pagó") {
+        cobroElement.style.color = "var(--accent-color)";
+    }
+}
+
+// Función para actualizar visualmente el select y la celda correspondiente
+function updateCellAppearance(selectElement, selectedValue, timestamp) {
+    const tdElement = selectElement.closest('td');
+
+    // Asegúrate de que la celda contenga un contenedor donde puedas mostrar los valores
+    let displayElement = tdElement.querySelector('.display-values');
+    if (!displayElement) {
+        // Si no existe, crea un contenedor para los valores
+        displayElement = document.createElement('div');
+        displayElement.classList.add('display-values');
+        tdElement.appendChild(displayElement);
+    }
+
+    // Mostrar el valor seleccionado de Cobro y el timestamp en el contenedor
+    displayElement.innerHTML = `
+        <span class="cobro-value">${selectedValue}</span><br>
+    `;
+
+    // Aplicar estilos según el valor de Cobro
+    applyStyles(displayElement.querySelector('.cobro-value'), selectedValue);
+}
+
+// Función principal que maneja los eventos y actualiza el select correspondiente
 export function updateSelectElements(database, collection) {
-    // Selecciona todos los elementos del DOM con la clase `pay-select`.
     const selectElements = document.querySelectorAll(".pay-select");
 
-    // Itera sobre cada elemento `select` encontrado.
     selectElements.forEach((selectElement) => {
-        // Define una función interna `updateSelectElement` para actualizar la apariencia y comportamiento de cada `select`.
-        const updateSelectElement = () => {
-            // Obtiene el valor seleccionado actualmente en el `select`.
-            const selectedValue = selectElement.value;
-            // Almacena el valor seleccionado en un atributo `data-oldValue` para referencia futura.
-            selectElement.dataset.oldValue = selectedValue;
-            // Desactiva el `select` si el valor es "11.00" o "24.00", impidiendo que el usuario lo modifique.
-            selectElement.disabled = selectedValue === "11.00" || selectedValue === "24.00";
+        // Guardar el valor original del select
+        const originalValue = selectElement.value;
 
-            // Encuentra el elemento `span` asociado dentro del mismo contenedor `div` que el `select`.
-            const spanElement = selectElement.closest('div.flex-container').querySelector('span');
+        // Asegurar que solo un select tenga un manejador de evento
+        selectElement.removeEventListener("change", handleSelectChange); // Eliminar cualquier evento previo
+        selectElement.addEventListener("change", handleSelectChange);
 
-            // Si el valor seleccionado es "12.00", cambia el color del texto a verde y lo hace en negrita.
-            if (selectedValue === "11.00" || selectedValue === "24.00") {
-                spanElement.style.color = "var(--secondary-color)";
-                spanElement.style.fontWeight = "bold";
-            // Si el valor seleccionado es "pagado", inserta un ícono de luz verde dentro del `span`.
-            } else if (selectedValue === "pagado") {
-                spanElement.innerHTML = '<span class="luz-verde"></span>';
-            // Si el valor seleccionado es "debe", inserta un ícono de luz roja dentro del `span`.
-            } else if (selectedValue === "debe") {
-                spanElement.innerHTML = '<span class="luz-roja"></span>';
-            // Si el valor seleccionado es otro, restablece el texto del `span` al valor seleccionado y lo formatea con estilo normal.
-            } else {
-                spanElement.textContent = selectedValue;
-                spanElement.style.color = "black";
-                spanElement.style.fontWeight = "normal";
+        // Función para actualizar en Firebase y la visualización
+        function handleSelectChange(event) {
+            const selectedValue = event.target.value;
+            const userId = event.target.getAttribute("data-id");
+            const field = event.target.getAttribute("data-field");
+            const timestamp = getPanamaDateTime(); // Obtener el timestamp actual
+
+            // Verificar que el userId esté definido
+            if (!userId) {
+                console.error("El atributo 'data-id' no está definido en el select", event.target);
+                return;
             }
-        };
 
-        // Agrega un event listener al `select` que se activa cada vez que se cambia el valor seleccionado.
-        selectElement.addEventListener("change", function () {
-            // Obtiene el nuevo valor seleccionado, así como los atributos `data-id` y `data-field` del `select`.
-            const selectedValue = this.value;
-            const userId = this.getAttribute("data-id");
-            const field = this.getAttribute("data-field");
-
-            // Verifica si el campo cambiado corresponde a uno de los días "1" a "6".
-            if (["1", "2", "3", "4", "5", "6"].includes(field)) {
-                // Si el usuario no confirma el cambio, restaura el valor anterior y sale de la función.
-                if (!confirm("¿Estás seguro de que deseas hacer este cambio?")) {
-                    this.value = this.dataset.oldValue;
-                    return;
+            const updateData = {
+                [field]: {
+                    Cobro: selectedValue,
+                    timestamp: timestamp
                 }
-            }
+            };
 
-            // Actualiza el valor en la base de datos de Firebase para el usuario y campo específico.
-            update(ref(database, `${collection}/${userId}`), {
-                [field]: selectedValue,
-            });
+            update(ref(database, `${collection}/${userId}`), updateData)
+                .then(() => {
+                    updateCellAppearance(event.target, selectedValue, timestamp);
 
-            // Si el valor seleccionado es "12.00" o "pagado", oculta el `select` añadiendo la clase `d-none`.
-            if (selectedValue === "12.00" || selectedValue === "pagado") {
-                this.classList.add('d-none');
-            // Si no, asegura que el `select` esté visible eliminando la clase `d-none`.
-            } else {
-                this.classList.remove('d-none');
-            }
+                    // Si el valor es 11.00 o 24.00, eliminar el select
+                    if (selectedValue === "6.00" || selectedValue === "10.00" || selectedValue === "11.00" || selectedValue === "24.00") {
+                        event.target.remove();  // Elimina el select después de actualizar
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al actualizar en Firebase: ", error);
+                    event.target.value = originalValue; // Restaurar el valor si hay un error
+                });
+        }
 
-            // Llama a la función `updateSelectElement` para aplicar los cambios visuales y de comportamiento al `select`.
-            updateSelectElement();
-        });
-
-        // Llama a la función `updateSelectElement` inicialmente para aplicar los estilos y configuraciones correctas.
-        updateSelectElement();
+        // Aplicar los estilos iniciales basados en el valor actual del select
+        updateCellAppearance(selectElement, selectElement.value, selectElement.closest('td').querySelector('.timestamp')?.textContent || '');
     });
 }
+
+

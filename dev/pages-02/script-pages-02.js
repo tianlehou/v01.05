@@ -43,21 +43,32 @@ export function mostrarDatos() {
             row.innerHTML = `
                 <td class="text-center">${filaNumero++}</td>
                 <td class="text-center">${user.nombre}</td>
-
-                ${["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"].map((dia) => `
-                    <td class="${["12.00", "pagado"].includes(user[dia]) ? 'text-center' : ''}">
-                        <div class="flex-container">
-                            <span class="${!user[dia] ? 'invisible-value' : ''}">${user[dia] || ''}</span>
-                            <select class="form-select pay-select ${["12.00", "pagado"].includes(user[dia]) ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
-                                <option value="" ${user[dia] === "" ? "selected" : ""}></option>
-                                <option value="11.00" ${user[dia] === "11.00" ? "selected" : ""}>11.00</option>
-                                <option value="24.00" ${user[dia] === "24.00" ? "selected" : ""}>24.00</option>
-                                <option value="No Pagó" ${user[dia] === "No Pagó" ? "selected" : ""}>No pagó</option>
-                            </select>
-                        </div>
-                    </td>
-                `).join('')}
-
+        
+                ${Array.from({ length: 31 }, (_, i) => {
+                    const dia = (i + 1).toString(); // Convertimos el índice a un número de día (de "1" a "31")
+                    const cobroData = user[dia] || {}; // Asume que es un objeto { Cobro: ..., timestamp: ... }
+                    const cobro = cobroData.Cobro || ''; // Accede al valor del cobro
+                    const timestamp = cobroData.timestamp || ''; // Accede al timestamp
+                    const isHidden = ["6.00", "10.00", "11.00", "24.00"].includes(cobro);
+        
+                    return `
+                        <td class="${isHidden ? 'text-center' : ''}">
+                            <div class="flex-container display-center">
+          
+                                <select class="form-select pay-select ${isHidden ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
+                                    <option value="" ${cobro === "" ? "selected" : ""}></option>
+                                    <option value="6.00" ${cobro === "6.00" ? "selected" : ""}>6.00</option>
+                                    <option value="10.00" ${cobro === "10.00" ? "selected" : ""}>10.00</option>
+                                    <option value="11.00" ${cobro === "11.00" ? "selected" : ""}>11.00</option>
+                                    <option value="24.00" ${cobro === "24.00" ? "selected" : ""}>24.00</option>
+                                    <option value="No Pagó" ${cobro === "No Pagó" ? "selected" : ""}>No Pagó</option>
+                                </select>
+                                <div class="timestamp">${timestamp}</div>
+                            </div>
+                        </td>
+                    `;
+                }).join('')}
+        
                 <td class="display-flex-center">
                     <button class="btn btn-primary mg-05em edit-user-button" data-id="${user.id}">
                         <i class="bi bi-pencil"></i>
@@ -71,16 +82,16 @@ export function mostrarDatos() {
                 </td>
             `;
             tabla.appendChild(row);
-
+        
             // Actualizar contador de asistencia para cada fila
             updateAttendanceCounter(row);
         }
-
+        
         // Llama a la función modularizada
         addEditEventListeners(database, collection);
         deleteRow(database, collection);
         updatePagination(totalPages, mostrarDatos);
-        updateSelectElements(database, collection);
+        updateSelectElements(database, collection); // Llama a la función para manejar los selectores y la actualización del timestamp
     });
 }
 
