@@ -65,7 +65,9 @@ thead th {
 }
 
 td:first-child,
-th:first-child {
+th:first-child,
+td:nth-child(2),
+th:nth-child(2) {
     position: sticky;
     left: 0;
     background-color: #a8d5ba !important; /* Color verde suave para la primera columna */
@@ -73,7 +75,8 @@ th:first-child {
     z-index: 1;
 }
 
-th:first-child {
+th:first-child,
+th:nth-child(2) {
     z-index: 3;
 }
 

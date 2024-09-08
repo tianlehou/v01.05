@@ -39,10 +39,11 @@ export function mostrarDatos() {
 
         for (let i = startIndex; i < endIndex; i++) {
             const user = data[i];
+            
             const row = document.createElement('tr');
             row.innerHTML = `
-            <td class="text-center">${user.nombre}</td>
             <td class="text-center">${filaNumero++}</td>
+            <td class="text-center">${user.nombre}</td>
         
                 ${Array.from({ length: 31 }, (_, i) => {
                     const dia = (i + 1).toString(); // Convertimos el índice a un número de día (de "1" a "31")
@@ -62,7 +63,7 @@ export function mostrarDatos() {
                                     <option value="24.00" ${cobro === "24.00" ? "selected" : ""}>24.00</option>
                                     <option value="No Pagó" ${cobro === "No Pagó" ? "selected" : ""}>No Pagó</option>
                                 </select>
-                                <div class="timestamp">${timestamp}</div>
+                            <div class="timestamp">${timestamp.split(' ').join('<br>')}</div> 
                             </div>
                         </td>
                     `;

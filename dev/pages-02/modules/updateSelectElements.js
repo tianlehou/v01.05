@@ -7,7 +7,7 @@ function getPanamaDateTime() {
     const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
     const panamaDate = new Date(utc + (3600000 * panamaOffset));
     
-    // Formatear manualmente para obtener DD/MM/AA
+    // Formatear manualmente para obtener DD/MM/AA y HH:MM:SS
     const day = String(panamaDate.getDate()).padStart(2, '0');
     const month = String(panamaDate.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
     const year = String(panamaDate.getFullYear()).slice(-2); // Obtener solo los dos últimos dígitos del año
@@ -15,7 +15,11 @@ function getPanamaDateTime() {
     const minutes = String(panamaDate.getMinutes()).padStart(2, '0');
     const seconds = String(panamaDate.getSeconds()).padStart(2, '0');
 
-    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    // Retornar tanto la fecha como la hora por separado para visualización
+    return {
+        date: `${day}/${month}/${year}`,
+        time: `${hours}:${minutes}:${seconds}`
+    };
 }
 
 // Función para aplicar estilos según el valor de Cobro
@@ -67,7 +71,7 @@ export function updateSelectElements(database, collection) {
             const selectedValue = event.target.value;
             const userId = event.target.getAttribute("data-id");
             const field = event.target.getAttribute("data-field");
-            const timestamp = getPanamaDateTime(); // Obtener el timestamp actual
+            const timestamp = getPanamaDateTime(); // Obtener la fecha y hora actual
 
             // Verificar que el userId esté definido
             if (!userId) {
@@ -75,15 +79,17 @@ export function updateSelectElements(database, collection) {
                 return;
             }
 
+            // Formato para enviar a Firebase (como cadena combinada)
             const updateData = {
                 [field]: {
                     Cobro: selectedValue,
-                    timestamp: timestamp
+                    timestamp: `${timestamp.date} ${timestamp.time}` // Enviar como una sola cadena a Firebase
                 }
             };
 
             update(ref(database, `${collection}/${userId}`), updateData)
                 .then(() => {
+                    // Actualizar solo la vista visual con la fecha y hora en dos líneas
                     updateCellAppearance(event.target, selectedValue, timestamp);
 
                     // Si el valor es 11.00 o 24.00, eliminar el select
@@ -98,6 +104,7 @@ export function updateSelectElements(database, collection) {
         }
 
         // Aplicar los estilos iniciales basados en el valor actual del select
-        updateCellAppearance(selectElement, selectElement.value, selectElement.closest('td').querySelector('.timestamp')?.textContent || '');
+        const timestamp = getPanamaDateTime(); // Llamada a la función para obtener timestamp actual
+        updateCellAppearance(selectElement, selectElement.value, timestamp); 
     });
 }
