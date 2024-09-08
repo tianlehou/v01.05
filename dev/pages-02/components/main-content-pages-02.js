@@ -9,8 +9,8 @@ function loadHTMLmaincontent() {
         <!-- Table - Head -->
         <thead>
           <tr>
+          <th class="text-center" id="headerTabla">Nombre</th>
             <th class="text-center">#</th>
-            <th class="text-center" id="headerTabla">Nombre</th>
             <th class="text-center">1</th>
             <th class="text-center">2</th>
             <th class="text-center">3</th>

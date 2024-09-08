@@ -6,7 +6,16 @@ function getPanamaDateTime() {
     const date = new Date();
     const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
     const panamaDate = new Date(utc + (3600000 * panamaOffset));
-    return panamaDate.toLocaleString('es-PA', { timeZone: 'America/Panama' });
+    
+    // Formatear manualmente para obtener DD/MM/AA
+    const day = String(panamaDate.getDate()).padStart(2, '0');
+    const month = String(panamaDate.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
+    const year = String(panamaDate.getFullYear()).slice(-2); // Obtener solo los dos últimos dígitos del año
+    const hours = String(panamaDate.getHours()).padStart(2, '0');
+    const minutes = String(panamaDate.getMinutes()).padStart(2, '0');
+    const seconds = String(panamaDate.getSeconds()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
 
 // Función para aplicar estilos según el valor de Cobro
@@ -92,5 +101,3 @@ export function updateSelectElements(database, collection) {
         updateCellAppearance(selectElement, selectElement.value, selectElement.closest('td').querySelector('.timestamp')?.textContent || '');
     });
 }
-
-

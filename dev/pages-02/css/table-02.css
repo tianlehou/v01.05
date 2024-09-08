@@ -18,8 +18,8 @@ thead th {
     z-index: 2;
 }
 
-td:first-child,
-th:first-child {
+td:nth-child(2),
+th:nth-child(2) {
     position: sticky;
     left: 0;
     background-color: #a8d5ba !important; /* Color verde suave para el encabezado */

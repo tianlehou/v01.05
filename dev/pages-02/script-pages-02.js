@@ -41,8 +41,8 @@ export function mostrarDatos() {
             const user = data[i];
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="text-center">${filaNumero++}</td>
-                <td class="text-center">${user.nombre}</td>
+            <td class="text-center">${user.nombre}</td>
+            <td class="text-center">${filaNumero++}</td>
         
                 ${Array.from({ length: 31 }, (_, i) => {
                     const dia = (i + 1).toString(); // Convertimos el índice a un número de día (de "1" a "31")
@@ -54,7 +54,6 @@ export function mostrarDatos() {
                     return `
                         <td class="${isHidden ? 'text-center' : ''}">
                             <div class="flex-container display-center">
-          
                                 <select class="form-select pay-select ${isHidden ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
                                     <option value="" ${cobro === "" ? "selected" : ""}></option>
                                     <option value="6.00" ${cobro === "6.00" ? "selected" : ""}>6.00</option>
