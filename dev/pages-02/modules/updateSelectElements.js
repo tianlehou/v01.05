@@ -2,7 +2,7 @@ import { ref, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase
 
 // Función para obtener la fecha y hora en la zona horaria de Panamá.
 function getPanamaDateTime() {
-    const panamaOffset = -4;
+    const panamaOffset = -5;
     const date = new Date();
     const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
     const panamaDate = new Date(utc + (3600000 * panamaOffset));
@@ -24,7 +24,7 @@ function getPanamaDateTime() {
 
 // Función para aplicar estilos según el valor de Cobro
 function applyStyles(cobroElement, selectedValue) {
-    if (selectedValue === "6.00" || selectedValue === "10.00" || selectedValue === "11.00" || selectedValue === "24.00") {
+    if (["6.00", "10.00", "11.00", "24.00"].includes(selectedValue)) {
         cobroElement.style.color = "var(--secondary-color)";
         cobroElement.style.fontWeight = "bold";
     } else if (selectedValue === "No Pagó") {
@@ -92,8 +92,9 @@ export function updateSelectElements(database, collection) {
                     // Actualizar solo la vista visual con la fecha y hora en dos líneas
                     updateCellAppearance(event.target, selectedValue, timestamp);
 
-                    // Si el valor es 11.00 o 24.00, eliminar el select
-                    if (selectedValue === "6.00" || selectedValue === "10.00" || selectedValue === "11.00" || selectedValue === "24.00") {
+                    // Si el valor es..., eliminar el select
+                    const removableValues = ["6.00", "10.00", "11.00", "24.00"];
+                    if (removableValues.includes(selectedValue)) {
                         event.target.remove();  // Elimina el select después de actualizar
                     }
                 })

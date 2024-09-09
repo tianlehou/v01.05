@@ -2,6 +2,8 @@ import { database } from "../../environment/firebaseConfig.js";
 import { ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { addEditEventListeners } from './editRow.js'; // Importa la función para añadir event listeners a los botones de editar
 import { deleteRow } from './deleteRow.js'; // Importa la función para añadir event listeners a los botones de borrar
+import { updateSelectElements } from "./updateSelectElements.js";
+import { collection } from "../script-pages-02.js";
 
 // Función para buscar y filtrar los datos
 export function findAndSearch(tabla) {
@@ -37,37 +39,7 @@ function renderUsersTable(data) {
           <tr>
             <th class="text-center">#</th>
             <th class="text-center" id="headerTabla">Unidad</th>
-            <th class="text-center">1</th>
-            <th class="text-center">2</th>
-            <th class="text-center">3</th>
-            <th class="text-center">4</th>
-            <th class="text-center">5</th>
-            <th class="text-center">6</th>
-            <th class="text-center">7</th>
-            <th class="text-center">8</th>
-            <th class="text-center">9</th>
-            <th class="text-center">10</th>
-            <th class="text-center">11</th>
-            <th class="text-center">12</th>
-            <th class="text-center">13</th>
-            <th class="text-center">14</th>
-            <th class="text-center">15</th>
-            <th class="text-center">16</th>
-            <th class="text-center">17</th>
-            <th class="text-center">18</th>
-            <th class="text-center">19</th>
-            <th class="text-center">20</th>
-            <th class="text-center">21</th>
-            <th class="text-center">22</th>
-            <th class="text-center">23</th>
-            <th class="text-center">24</th>
-            <th class="text-center">25</th>
-            <th class="text-center">26</th>
-            <th class="text-center">27</th>
-            <th class="text-center">28</th>
-            <th class="text-center">29</th>
-            <th class="text-center">30</th>
-            <th class="text-center">31</th>
+            ${Array.from({ length: 31 }, (_, i) => `<th class="text-center">${i + 1}</th>`).join('')}
             <th>Acciones</th>
             <th class="text-center">userId</th>
           </tr>
@@ -76,19 +48,27 @@ function renderUsersTable(data) {
         <td class="text-center">${index + 1}</td>
         <td class="text-center">${user.nombre}</td>
 
-        ${["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"].map((dia) => `
-          <td class="${["12.00", "pagado"].includes(user[dia]) ? 'text-center' : ''}">
-            <div class="flex-container">
-              <span class="${!user[dia] ? 'invisible-value' : ''}">${user[dia] || ''}</span>
-              <select class="form-select pay-select ${["12.00", "pagado"].includes(user[dia]) ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
-                <option value="" ${user[dia] === "" ? "selected" : ""}></option>
-                <option value="---" ${user[dia] === "---" ? "selected" : "---"}></option>
-                <option value="12.00" ${user[dia] === "12.00" ? "selected" : ""}>12.00</option>
-                <option value="pagado" ${user[dia] === "pagado" ? "selected" : ""}>pagado</option>
-              </select>
-            </div>
-          </td>
-        `).join('')}
+                ${Array.from({ length: 31 }, (_, i) => {
+                    const dia = (i + 1).toString(); // Convertimos el índice a un número de día (de "1" a "31")
+                    const cobroData = user[dia] || {}; // Asume que es un objeto { Cobro: ..., timestamp: ... }
+                    const cobro = cobroData.Cobro || ''; // Accede al valor del cobro
+                    const timestamp = cobroData.timestamp || ''; // Accede al timestamp
+                    const isHidden = ["6.00", "10.00", "11.00", "24.00"].includes(cobro);
+        
+                    return `
+                        <td class="${isHidden ? 'text-center' : ''}">
+                          <div class="flex-container display-center">
+                            <select class="form-select pay-select ${isHidden ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
+                              ${["", "6.00", "10.00", "11.00", "24.00", "No Pagó"].map(option => 
+                                `<option value="${option}" ${cobro === option ? "selected" : ""}>${option}</option>`
+                              ).join('')}
+                            </select>
+                            <div class="timestamp">${timestamp.replace(' ', '<br>')}</div>
+                          </div>
+                        </td>
+                    `;
+                }).join('')}
+        
         <td class="display-flex-center">
           <button class="btn btn-primary mg-05em edit-user-button" data-id="${user.id}">
             <i class="bi bi-pencil"></i>
@@ -107,6 +87,7 @@ function renderUsersTable(data) {
 
   // Añadir el manejador de eventos a los selects
   attachSelectChangeListeners();
+  updateSelectElements(database, collection); 
 }
 
 // Función para adjuntar manejadores de eventos a los selects

@@ -1,9 +1,7 @@
-// script-pages-02.js
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database } from "../environment/firebaseConfig.js";
 
 import { addEditEventListeners } from "./modules/editRow.js";
-import { changeSemanaSelect } from "../modules/tabla/changeSelectEvent.js";
 import { deleteRow } from "./modules/deleteRow.js";
 import { toggleTableVisibility } from "../modules/tabla/toggleTableVisibility.js";
 import { updateAttendanceCounter } from "../modules/tabla/attendanceCounter.js";
@@ -12,7 +10,7 @@ import { initializeSearch } from "./modules/searchFunction.js";
 import { initScrollButtons } from "../modules/scrollButtons.js";
 import { updatePagination, currentPage, itemsPerPage } from "../modules/pagination.js";
 import { handleFileUpload } from '../modules/Excel/uploadExcelHandler.js';
-import "../modules/newRegister.js";
+import "./modules/newRegister.js";
 import { includeHTML } from '../components/includeHTML/includeHTML.js';
 import { updateSelectElements } from './modules/updateSelectElements.js';
 import "./modules/downloadToExcel.js";
@@ -21,14 +19,91 @@ import "./modules/downloadToExcel.js";
 const tabla = document.getElementById("contenidoTabla");
 let totalPages;
 
+// Lee la variable collection desde el HTML
+export const collection = (() => {
+    const scriptTag = document.querySelector('script[data-collection]');
+    if (scriptTag) {
+        return scriptTag.getAttribute('data-collection');
+    } else {
+        console.error('No se encontró el script con data-collection.');
+        return '';
+    }
+})();
+
+if (!collection) {
+    console.error('La variable collection está vacía.');
+}
+
+// Función para obtener la cantidad de días en un mes específico
+export function getDaysInMonth(month, year) {
+    return new Date(year, month, 0).getDate();
+}
+
+// Función para obtener el mes y año a partir de la URL
+export function getMonthAndYearFromURL() {
+    const url = window.location.href;
+    const month = parseInt(url.split('/month-')[1].split('.html')[0], 10);
+    const year = new Date().getFullYear(); // Puedes ajustar el año según sea necesario
+    console.log(`Month: ${month}, Year: ${year}`); // Añade este log para depuración
+    return { month, year };
+}
+
+// Genera las columnas del calendario basadas en la cantidad de días en el mes
+export function generateCalendarDays(month, year, user) {
+    const daysInMonth = getDaysInMonth(month, year);
+    console.log(`Generating calendar days for ${daysInMonth} days`); // Añade este log para depuración
+    return Array.from({ length: daysInMonth }, (_, i) => {
+        const dia = (i + 1).toString();
+        const cobro = user[dia]?.Cobro || "";
+        const timestamp = user[dia]?.timestamp || "";
+        return `
+            <td class="${['6.00', '10.00', '11.00', '24.00'].includes(cobro) ? 'text-center' : ''}">
+              <div class="flex-container display-center">
+                <select class="form-select pay-select ${['6.00', '10.00', '11.00', '24.00'].includes(cobro) ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
+                  ${["", "6.00", "10.00", "11.00", "24.00", "No Pagó"].map(option => 
+                    `<option value="${option}" ${cobro === option ? "selected" : ""}>${option}</option>`
+                  ).join('')}
+                </select>
+                <div class="timestamp">${timestamp.replace(' ', '<br>') || ''}</div>
+              </div>
+            </td>
+        `;
+    }).join('');
+}
+
+function getElementByIdSafe(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        console.error(`Element with ID '${id}' not found.`);
+    }
+    return element;
+}
+
+// Mostrar datos y generar las filas de la tabla
 export function mostrarDatos() {
+    const tabla = getElementByIdSafe("contenidoTabla");
+    if (!tabla) {
+        return; // Salir si no se encuentra el elemento
+    }
+    const { month, year } = getMonthAndYearFromURL();
+    console.log(`Firebase Collection: ${collection}`); // Añade este log para depuración
+
+    if (!collection) {
+        console.error('La ruta de la colección es inválida.');
+        return;
+    }
+
     onValue(ref(database, collection), (snapshot) => {
         tabla.innerHTML = "";
 
         const data = [];
         snapshot.forEach((childSnapshot) => {
-            data.push({ id: childSnapshot.key, ...childSnapshot.val() });
+            const user = childSnapshot.val();
+            // Añadir el ID del snapshot a los datos
+            data.push({ id: childSnapshot.key, ...user });
         });
+
+        console.log('Data from Firebase:', data); // Añade este log para depuración
 
         data.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
@@ -42,33 +117,9 @@ export function mostrarDatos() {
             
             const row = document.createElement('tr');
             row.innerHTML = `
-            <td class="text-center">${filaNumero++}</td>
-            <td class="text-center">${user.nombre}</td>
-        
-                ${Array.from({ length: 31 }, (_, i) => {
-                    const dia = (i + 1).toString(); // Convertimos el índice a un número de día (de "1" a "31")
-                    const cobroData = user[dia] || {}; // Asume que es un objeto { Cobro: ..., timestamp: ... }
-                    const cobro = cobroData.Cobro || ''; // Accede al valor del cobro
-                    const timestamp = cobroData.timestamp || ''; // Accede al timestamp
-                    const isHidden = ["6.00", "10.00", "11.00", "24.00"].includes(cobro);
-        
-                    return `
-                        <td class="${isHidden ? 'text-center' : ''}">
-                            <div class="flex-container display-center">
-                                <select class="form-select pay-select ${isHidden ? 'd-none' : ''}" data-id="${user.id}" data-field="${dia}">
-                                    <option value="" ${cobro === "" ? "selected" : ""}></option>
-                                    <option value="6.00" ${cobro === "6.00" ? "selected" : ""}>6.00</option>
-                                    <option value="10.00" ${cobro === "10.00" ? "selected" : ""}>10.00</option>
-                                    <option value="11.00" ${cobro === "11.00" ? "selected" : ""}>11.00</option>
-                                    <option value="24.00" ${cobro === "24.00" ? "selected" : ""}>24.00</option>
-                                    <option value="No Pagó" ${cobro === "No Pagó" ? "selected" : ""}>No Pagó</option>
-                                </select>
-                            <div class="timestamp">${timestamp.split(' ').join('<br>')}</div> 
-                            </div>
-                        </td>
-                    `;
-                }).join('')}
-        
+                <td class="text-center">${filaNumero++}</td>
+                <td class="text-center">${user.nombre}</td>
+                ${generateCalendarDays(month, year, user)}
                 <td class="display-flex-center">
                     <button class="btn btn-primary mg-05em edit-user-button" data-id="${user.id}">
                         <i class="bi bi-pencil"></i>
@@ -97,11 +148,11 @@ export function mostrarDatos() {
 
 // Inicializa la tabla y eventos al cargar el documento
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Document loaded'); // Añade este log para confirmar la carga del documento
     mostrarDatos();
     includeHTML();
     initializeSearch(tabla);
     initScrollButtons(tabla);
-    changeSemanaSelect(tabla, database, collection);
     toggleTableVisibility();
     handleFileUpload();
 });
