@@ -80,23 +80,6 @@ th:nth-child(2) {
     z-index: 3;
 }
 
-/* Estilo de luces */
-.luz-verde {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-color: var(--secondary-color);
-    border-radius: 50%;
-}
-
-.luz-roja {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-color: var(--accent-color);
-    border-radius: 50%;
-}
-
 /* Espaciado en la sección de reglas */
 .section-rules p {
     margin: 10px 20px;
