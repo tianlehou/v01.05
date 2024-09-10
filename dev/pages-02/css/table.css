@@ -149,3 +149,13 @@ table {
     border-collapse: collapse;
     table-layout: fixed;
 }
+
+/* Estilo para la fecha */
+.timestamp {
+    color: gray;           /* Color gris para la fecha */
+    font-size: 0.75em;      /* Tamaño de fuente pequeño */
+    font-style: italic;     /* Estilo cursivo */
+    margin-top: 4px;        /* Margen superior para separar del valor de Cobro */
+    display: inline-block;  /* Asegurar que se comporte como un bloque en línea */
+}
+

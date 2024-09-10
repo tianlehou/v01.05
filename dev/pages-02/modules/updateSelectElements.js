@@ -22,37 +22,7 @@ function getPanamaDateTime() {
     };
 }
 
-// Función para aplicar estilos según el valor de Cobro
-function applyStyles(cobroElement, selectedValue) {
-    if (["6.00", "10.00", "11.00", "24.00"].includes(selectedValue)) {
-        cobroElement.style.color = "var(--secondary-color)";
-        cobroElement.style.fontWeight = "bold";
-    } else if (selectedValue === "No Pagó") {
-        cobroElement.style.color = "var(--accent-color)";
-    }
-}
 
-// Función para actualizar visualmente el select y la celda correspondiente
-function updateCellAppearance(selectElement, selectedValue, timestamp) {
-    const tdElement = selectElement.closest('td');
-
-    // Asegúrate de que la celda contenga un contenedor donde puedas mostrar los valores
-    let displayElement = tdElement.querySelector('.display-values');
-    if (!displayElement) {
-        // Si no existe, crea un contenedor para los valores
-        displayElement = document.createElement('div');
-        displayElement.classList.add('display-values');
-        tdElement.appendChild(displayElement);
-    }
-
-    // Mostrar el valor seleccionado de Cobro y el timestamp en el contenedor
-    displayElement.innerHTML = `
-        <span class="cobro-value">${selectedValue}</span><br>
-    `;
-
-    // Aplicar estilos según el valor de Cobro
-    applyStyles(displayElement.querySelector('.cobro-value'), selectedValue);
-}
 
 // Función principal que maneja los eventos y actualiza el select correspondiente
 export function updateSelectElements(database, collection) {
@@ -108,4 +78,37 @@ export function updateSelectElements(database, collection) {
         const timestamp = getPanamaDateTime(); // Llamada a la función para obtener timestamp actual
         updateCellAppearance(selectElement, selectElement.value, timestamp); 
     });
+}
+
+// Función para aplicar estilos según el valor de Cobro
+function applyStyles(cobroElement, selectedValue) {
+    if (["6.00", "10.00", "11.00", "24.00"].includes(selectedValue)) {
+        cobroElement.style.color = "var(--primary-color)";
+        cobroElement.style.fontWeight = "500";
+        cobroElement.style.fontSize = "1.33em";
+    } else if (selectedValue === "No Pagó") {
+        cobroElement.style.color = "var(--accent-color)";
+    }
+}
+
+// Función para actualizar visualmente el select y la celda correspondiente
+function updateCellAppearance(selectElement, selectedValue, timestamp) {
+    const tdElement = selectElement.closest('td');
+
+    // Asegúrate de que la celda contenga un contenedor donde puedas mostrar los valores
+    let displayElement = tdElement.querySelector('.display-values');
+    if (!displayElement) {
+        // Si no existe, crea un contenedor para los valores
+        displayElement = document.createElement('div');
+        displayElement.classList.add('display-values');
+        tdElement.appendChild(displayElement);
+    }
+
+    // Mostrar el valor seleccionado de Cobro y el timestamp en el contenedor
+    displayElement.innerHTML = `
+        <span class="cobro-value">${selectedValue}</span><br>
+    `;
+
+    // Aplicar estilos según el valor de Cobro
+    applyStyles(displayElement.querySelector('.cobro-value'), selectedValue);
 }
