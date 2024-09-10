@@ -4,7 +4,6 @@ import { database } from "../environment/firebaseConfig.js";
 import { addEditEventListeners } from "./modules/editRow.js";
 import { deleteRow } from "./modules/deleteRow.js";
 import { toggleTableVisibility } from "../modules/tabla/toggleTableVisibility.js";
-import { updateAttendanceCounter } from "../modules/tabla/attendanceCounter.js";
 
 import { initializeSearch } from "./modules/searchFunction.js";
 import { initScrollButtons } from "../modules/scrollButtons.js";
@@ -14,6 +13,8 @@ import "./modules/newRegister.js";
 import { includeHTML } from '../components/includeHTML/includeHTML.js';
 import { updateSelectElements } from './modules/updateSelectElements.js';
 import "./modules/downloadToExcel.js";
+// Mostrar datos y generar las filas de la tabla
+import { updateTotalSums } from './modules/sumColumns.js';
 
 // Constantes y variables de estado
 const tabla = document.getElementById("contenidoTabla");
@@ -24,9 +25,6 @@ export const collection = (() => {
     const scriptTag = document.querySelector('script[data-collection]');
     if (scriptTag) {
         return scriptTag.getAttribute('data-collection');
-    } else {
-        console.error('No se encontró el script con data-collection.');
-        return '';
     }
 })();
 
@@ -44,14 +42,12 @@ export function getMonthAndYearFromURL() {
     const url = window.location.href;
     const month = parseInt(url.split('/month-')[1].split('.html')[0], 10);
     const year = new Date().getFullYear(); // Puedes ajustar el año según sea necesario
-    console.log(`Month: ${month}, Year: ${year}`); // Añade este log para depuración
     return { month, year };
 }
 
 // Genera las columnas del calendario basadas en la cantidad de días en el mes
 export function generateCalendarDays(month, year, user) {
     const daysInMonth = getDaysInMonth(month, year);
-    console.log(`Generating calendar days for ${daysInMonth} days`); // Añade este log para depuración
     return Array.from({ length: daysInMonth }, (_, i) => {
         const dia = (i + 1).toString();
         const cobro = user[dia]?.Cobro || "";
@@ -79,14 +75,13 @@ function getElementByIdSafe(id) {
     return element;
 }
 
-// Mostrar datos y generar las filas de la tabla
+
 export function mostrarDatos() {
     const tabla = getElementByIdSafe("contenidoTabla");
     if (!tabla) {
         return; // Salir si no se encuentra el elemento
     }
     const { month, year } = getMonthAndYearFromURL();
-    console.log(`Firebase Collection: ${collection}`); // Añade este log para depuración
 
     if (!collection) {
         console.error('La ruta de la colección es inválida.');
@@ -102,8 +97,6 @@ export function mostrarDatos() {
             // Añadir el ID del snapshot a los datos
             data.push({ id: childSnapshot.key, ...user });
         });
-
-        console.log('Data from Firebase:', data); // Añade este log para depuración
 
         data.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
@@ -133,9 +126,6 @@ export function mostrarDatos() {
                 </td>
             `;
             tabla.appendChild(row);
-        
-            // Actualizar contador de asistencia para cada fila
-            updateAttendanceCounter(row);
         }
         
         // Llama a la función modularizada
@@ -143,12 +133,15 @@ export function mostrarDatos() {
         deleteRow(database, collection);
         updatePagination(totalPages, mostrarDatos);
         updateSelectElements(database, collection); // Llama a la función para manejar los selectores y la actualización del timestamp
+
+        // Llama a la función para actualizar los totales
+        updateTotalSums(tabla, Array.from({ length: getDaysInMonth(month, year) }, (_, i) => i + 2));
     });
 }
 
+
 // Inicializa la tabla y eventos al cargar el documento
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Document loaded'); // Añade este log para confirmar la carga del documento
     mostrarDatos();
     includeHTML();
     initializeSearch(tabla);
