@@ -45,8 +45,9 @@ function getElementByIdSafe(id) {
 export function mostrarDatos() {
     const tabla = getElementByIdSafe("contenidoTabla");
     if (!tabla) {
-        return; // Salir si no se encuentra el elemento
+        return;
     }
+    
     const { month, year } = getMonthAndYearFromURL();
 
     if (!collection) {
@@ -60,21 +61,14 @@ export function mostrarDatos() {
         const data = [];
         snapshot.forEach((childSnapshot) => {
             const user = childSnapshot.val();
-            // Añadir el ID del snapshot a los datos
             data.push({ id: childSnapshot.key, ...user });
         });
 
         data.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-        totalPages = Math.ceil(data.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-        let filaNumero = startIndex + 1;
-
-        for (let i = startIndex; i < endIndex; i++) {
-            const user = data[i];
-            
-            const row = document.createElement('tr');
+        let filaNumero = 1;
+        data.forEach((user) => {
+            const row = document.createElement("tr");
             row.innerHTML = `
                 <td class="text-center">${filaNumero++}</td>
                 <td class="text-center">${user.nombre}</td>
@@ -92,15 +86,12 @@ export function mostrarDatos() {
                 </td>
             `;
             tabla.appendChild(row);
-        }
-        
-        // Llama a la función modularizada
-        addEditEventListeners(database, collection);
-        deleteRow(database, collection);
-        updatePagination(totalPages, mostrarDatos);
-        updateSelectElements(database, collection); // Llama a la función para manejar los selectores y la actualización del timestamp
+        });
 
-        // Llama a la función para actualizar los totales
+        addEditEventListeners(database, collection); // Asegúrate de que esto esté aquí
+        deleteRow(database, collection);
+        updateSelectElements(database, collection);
+        updatePagination(totalPages, mostrarDatos);
         updateTotalSums(tabla, Array.from({ length: getDaysInMonth(month, year) }, (_, i) => i + 2));
     });
 }
