@@ -6,14 +6,16 @@ function getPanamaDateTime() {
     const date = new Date();
     const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
     const panamaDate = new Date(utc + (3600000 * panamaOffset));
-
+    
+    // Formatear manualmente para obtener DD/MM/AA y HH:MM:SS
     const day = String(panamaDate.getDate()).padStart(2, '0');
-    const month = String(panamaDate.getMonth() + 1).padStart(2, '0');
-    const year = String(panamaDate.getFullYear()).slice(-2);
+    const month = String(panamaDate.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
+    const year = String(panamaDate.getFullYear()).slice(-2); // Obtener solo los dos últimos dígitos del año
     const hours = String(panamaDate.getHours()).padStart(2, '0');
     const minutes = String(panamaDate.getMinutes()).padStart(2, '0');
     const seconds = String(panamaDate.getSeconds()).padStart(2, '0');
 
+    // Retornar tanto la fecha como la hora por separado para visualización
     return {
         date: `${day}/${month}/${year}`,
         time: `${hours}:${minutes}:${seconds}`
@@ -25,83 +27,54 @@ export function updateSelectElements(database, collection) {
     const selectElements = document.querySelectorAll(".pay-select");
 
     selectElements.forEach((selectElement) => {
+        // Guardar el valor original del select
         const originalValue = selectElement.value;
 
-        selectElement.removeEventListener("change", handleSelectChange); // Eliminar eventos previos
+        // Asegurar que solo un select tenga un manejador de evento
+        selectElement.removeEventListener("change", handleSelectChange); // Eliminar cualquier evento previo
         selectElement.addEventListener("change", handleSelectChange);
 
-        // Función que muestra el modal de confirmación
-        function showConfirmationModal(callback) {
-            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {
-                keyboard: false
-            });
-            
-            const confirmButton = document.getElementById('confirmActionButton');
-            const cancelButton = document.querySelector('.modal-footer .btn-secondary');
-
-            // Mostrar el modal
-            confirmationModal.show();
-
-            // Confirmar acción
-            confirmButton.onclick = function () {
-                confirmationModal.hide();
-                callback(true); // Acción confirmada
-            };
-
-            // Cancelar acción
-            cancelButton.onclick = function () {
-                confirmationModal.hide();
-                callback(false); // Acción cancelada
-            };
-        }
-
+        // Función para actualizar en Firebase y la visualización
         function handleSelectChange(event) {
             const selectedValue = event.target.value;
             const userId = event.target.getAttribute("data-id");
             const field = event.target.getAttribute("data-field");
+            const timestamp = getPanamaDateTime(); // Obtener la fecha y hora actual
 
+            // Verificar que el userId esté definido
             if (!userId) {
                 console.error("El atributo 'data-id' no está definido en el select", event.target);
                 return;
             }
 
-            showConfirmationModal((isConfirmed) => {
-                if (isConfirmed) {
-                    const timestamp = getPanamaDateTime(); // Obtener fecha y hora actuales
-
-                    // Formato para enviar a Firebase
-                    const updateData = {
-                        [field]: {
-                            Cobro: selectedValue,
-                            timestamp: `${timestamp.date} ${timestamp.time}`
-                        }
-                    };
-
-                    update(ref(database, `${collection}/${userId}`), updateData)
-                        .then(() => {
-                            // Actualizar la vista visual con la fecha y hora en dos líneas
-                            updateCellAppearance(event.target, selectedValue, timestamp);
-
-                            // Si el valor es uno de los especificados, eliminar el select
-                            const removableValues = ["6.00", "10.00", "11.00", "24.00"];
-                            if (removableValues.includes(selectedValue)) {
-                                event.target.remove();  // Elimina el select después de actualizar
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("Error al actualizar en Firebase: ", error);
-                            event.target.value = originalValue; // Restaurar valor en caso de error
-                        });
-                } else {
-                    // Restaurar el valor original si la acción fue cancelada
-                    event.target.value = originalValue;
+            // Formato para enviar a Firebase (como cadena combinada)
+            const updateData = {
+                [field]: {
+                    Cobro: selectedValue,
+                    timestamp: `${timestamp.date} ${timestamp.time}` // Enviar como una sola cadena a Firebase
                 }
-            });
+            };
+
+            update(ref(database, `${collection}/${userId}`), updateData)
+                .then(() => {
+                    // Actualizar solo la vista visual con la fecha y hora en dos líneas
+                    updateCellAppearance(event.target, selectedValue, timestamp);
+
+                    // Si el valor es..., eliminar el select
+                    const removableValues = ["6.00", "10.00", "11.00", "24.00"];
+                    if (removableValues.includes(selectedValue)) {
+                        event.target.remove();  // Elimina el select después de actualizar
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al actualizar en Firebase: ", error);
+                    event.target.value = originalValue; // Restaurar el valor si hay un error
+                });
         }
 
         // Aplicar los estilos iniciales basados en el valor actual del select
-        const timestamp = getPanamaDateTime();
-        updateCellAppearance(selectElement, selectElement.value, timestamp);
+        const timestamp = getPanamaDateTime(); // Llamada a la función para obtener timestamp actual
+        updateCellAppearance(selectElement, selectElement.value, timestamp); 
     });
 }
 
@@ -123,6 +96,7 @@ function updateCellAppearance(selectElement, selectedValue, timestamp) {
     // Asegúrate de que la celda contenga un contenedor donde puedas mostrar los valores
     let displayElement = tdElement.querySelector('.display-values');
     if (!displayElement) {
+        // Si no existe, crea un contenedor para los valores
         displayElement = document.createElement('div');
         displayElement.classList.add('display-values');
         tdElement.appendChild(displayElement);
