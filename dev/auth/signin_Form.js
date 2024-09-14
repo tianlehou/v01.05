@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         const credential = await signInWithEmailAndPassword(auth, email, password);
         console.log(credential);
-        window.location.href = "./pages/week01.html";
+        window.location.href = "./pages-02/month-00.html";
 
         signInSuccess.textContent = `${credential.user.email} ¡Bienvenido!`;
       } catch (error) {
