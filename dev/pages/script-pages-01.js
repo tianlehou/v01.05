@@ -76,6 +76,7 @@ export function mostrarDatos() {
                 <button class="btn btn-danger delete-user-button" data-id="${user.id}"><i class="bi bi-eraser-fill"></i></button>
               </td>
               <td class="text-center">${user.email}</td>
+              <td class="text-center">${user.userId}</td>
             </tr>
           `;
           tabla.innerHTML += row;
