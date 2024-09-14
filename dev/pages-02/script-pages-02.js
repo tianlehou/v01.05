@@ -1,5 +1,6 @@
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { database } from "../environment/firebaseConfig.js";
+import { checkAuth } from '../auth/authCheck.js';
 
 import { addEditEventListeners } from "./modules/editRow.js";
 import { deleteRow } from "./modules/deleteRow.js";
@@ -98,6 +99,7 @@ export function mostrarDatos() {
 
 // Inicializa la tabla y eventos al cargar el documento
 document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
     mostrarDatos();
     includeHTML();
     initializeSearch(tabla);
