@@ -19,7 +19,6 @@ function loadHTMLmaincontent() {
             <th class="text-center">Rol</th>
             <th>Acciones</th>
             <th class="text-center">correo</th>
-            <th class="text-center">UID</th>
           </tr>
         </thead>
 

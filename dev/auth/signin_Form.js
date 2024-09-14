@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         const credential = await signInWithEmailAndPassword(auth, email, password);
         console.log(credential);
-        window.location.href = "./pages-02/month-00.html";
+        window.location.href = "./pages/biblioteca.html";
 
         signInSuccess.textContent = `${credential.user.email} ¡Bienvenido!`;
       } catch (error) {
@@ -42,12 +42,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   } else {
     console.error("Formulario de inicio de sesión no encontrado.");
-  }
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-  const passwordInput = document.getElementById('signInPassword');
-  if (passwordInput) {
-    passwordInput.value = ''; // Vaciar el campo de contraseña al cargar la página
   }
 });
