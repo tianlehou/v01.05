@@ -1,10 +1,11 @@
-- agregar, bloquear select al actualizarse.
-- arreglar los undefined de search
-
-display-none
-al select cuando el valor sea pagado
 
 
 buscar la manera de que la columna nombre
 tenga una posicion fixed
 para mejorar la experiencia del usuario y se evite futuros errores de pagos.
+
+v01.09.09 dev - Added: thead de totales 
+
+
+Pendientes
+toast - mensaje de exito al confirmar la edicion

@@ -44,3 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error("Formulario de inicio de sesión no encontrado.");
   }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+  const passwordInput = document.getElementById('signInPassword');
+  if (passwordInput) {
+    passwordInput.value = ''; // Vaciar el campo de contraseña al cargar la página
+  }
+});
