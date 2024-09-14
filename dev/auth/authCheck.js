@@ -3,7 +3,7 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { auth } from '../environment/firebaseConfig.js'; // Asegúrate de importar correctamente tu configuración de Firebase
 
 // Tiempo de inactividad en milisegundos (5 minutos)
-const INACTIVITY_TIME_LIMIT = 1 * 60 * 1000;
+const INACTIVITY_TIME_LIMIT = 5 * 60 * 1000;
 let inactivityTimer;
 
 // Función para restablecer el temporizador de inactividad

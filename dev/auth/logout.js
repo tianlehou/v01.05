@@ -1,12 +1,13 @@
-import { signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { auth } from "../firebase.js";
+// ../auth/checkAuth.js
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { auth } from '../environment/firebaseConfig.js';
 
-export const logout = document.querySelector("#logout");
-
-logout.addEventListener("click", async () => {
-    await signOut(auth);
-    console.log("user signed out");
-
-    window.location.href = "index.html";
-
+document.addEventListener("DOMContentLoaded", () => {
+    // Verifica el estado de autenticación
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            // Si no hay usuario autenticado, redirige a la página de inicio de sesión
+            window.location.href = "../login.html";
+        }
+    });
 });
