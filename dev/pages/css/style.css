@@ -161,74 +161,15 @@ body {
     border: 1px solid #999;
 }
 
-/* Pagination*/
-.pagination {
-    padding: 0;
-    margin: -1em 1em -1em 1em;
-}
-
-.pagination ul {
-    color: transparent;
-    width: auto;
-    padding: 10px;
-    height: 40px;
-    margin-top: 18px;
-}
-
-ul li {
-    margin: 1px;
-}
-
-ul li.pageNumber {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    font-size: 0.8em;
-    font-weight: 500;
-}
-
-ul li a {
-    display: block;
-    color: #333;
-    font-weight: 500;
-    border-radius: 50%;
-    text-decoration: none;
-}
-
-ul li.pageNumber:hover a,
-ul li.pageNumber.active a {
-    background: #333;
-    color: #fff;
-    text-decoration: none;
-}
-
-ul li.pageNumber.active a {
-    background: green;
-    color: #fff;
-}
-
-.pagination #scrollToBottomBtn,
-#scrollToTopBtn {
-    color: #333;
-    border: none;
-    font-size: 2em;
-}
-
-
-.pagination select {
-    height: 40px;
-    width: fit-content;
-    font-size: 1em;
-    font-weight: 500;
-    padding: 0 2em 0 1em;
-    text-align: start;
-}
-
 .input-group {
     width: 90%;
     margin-bottom: 1em;
 }
+
+.input-group input {
+    background-color: white !important;
+}
+
 #searchInput {
     width: 100px;
     height: 40px;
@@ -301,60 +242,6 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
     justify-content: center;
     align-items: center;
-}
-
-/* Modal */
-/* Modal */
-#confirmationModal {
-    display: none;
-    position: fixed;
-    top: 50px;
-
-}
-
-.modal {
-    background-color: #fff;
-    height: 80%;
-}
-
-.modal .modal-header {
-    text-align: center;
-    margin-bottom: .5em;
-}
-
-.modal .modal-content {
-    width: 100%;
-    background-color: transparent;
-    border: 1px solid;
-    border-radius: 10px;
-    font-size: 1.2em;
-    font-weight: 500;
-    text-align: center;
-    padding: 1em;
-    margin: 0;
-}
-
-.modal-title {
-    font-size: 1.5em;
-    font-weight: 500;
-    color: #007bff;
-}
-
-.modal #confirm-delete {
-    background-color: red;
-    font-weight: 500;
-    font-size: 1em;
-}
-
-.modal #cancel-delete {
-    background-color: dodgerblue;
-    font-weight: 500;
-    font-size: 1em;
-}
-
-.modal .footer {
-    margin-top: 0px;
-    background-color: transparent;
 }
 
 /* Main */

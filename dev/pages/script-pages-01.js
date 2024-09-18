@@ -3,7 +3,7 @@ import { database } from "../environment/firebaseConfig.js";
 import { checkAuth } from '../auth/authCheck.js';
 import "../auth/signup_Form.js";
 
-import { addEditEventListeners } from "../modules/tabla/editRow.js";
+import { addEditEventListeners } from "./modules/editRow.js";
 import { deleteRow } from "../modules/tabla/deleteRow.js";
 import "../modules/downloadToExcel.js";
 
@@ -11,12 +11,8 @@ import { includeHTML } from '../components/includeHTML/includeHTML.js';
 import { changeEstadoSelectEvent, changeRoleSelectEvent } from "../modules/tabla/changeSelectEvent.js";
 import { initializeSearch } from "../modules/searchFunction.js";
 
-import { initScrollButtons } from "../modules/scrollButtons.js";
-import { updatePagination, currentPage, itemsPerPage } from "../modules/pagination.js";
-
 // Constantes y variables de estado
 const tabla = document.getElementById("contenidoTabla");
-let totalPages;
 
 export function mostrarDatos() {
     onValue(ref(database, collection), (snapshot) => {
@@ -29,12 +25,9 @@ export function mostrarDatos() {
 
         data.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-        totalPages = Math.ceil(data.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-        let filaNumero = startIndex + 1;
+        let filaNumero = 1;
 
-        for (let i = startIndex; i < endIndex; i++) {
+        for (let i = 0; i < data.length; i++) {
             const user = data[i];
             const row = `
             <tr>
@@ -54,9 +47,9 @@ export function mostrarDatos() {
                   <select class="form-select estado-select" data-id="${user.id}">
                     <option value="Ninguno" ${user.estado === "Ninguno" ? "selected" : ""}>Ninguno</option>
                     <option value="Activo" ${user.estado === "Activo" ? "selected" : ""}>Activo</option>
+                    <option value="Sin carro" ${user.estado === "Sin carro" ? "selected" : ""}>Sin carro</option>
                     <option value="Suspendido" ${user.estado === "Suspendido" ? "selected" : ""}>Suspendido</option>
                     <option value="Expulsado" ${user.estado === "Expulsado" ? "selected" : ""}>Expulsado</option>
-                    <option value="Sin carro" ${user.estado === "Sin carro" ? "selected" : ""}>Sin carro</option>
                   </select>
                 </div>
               </td>
@@ -65,6 +58,8 @@ export function mostrarDatos() {
                   <span>${user.role}</span>
                   <select class="form-select role-select" data-id="${user.id}">
                     <option value="Ninguno" ${user.role === "Ninguno" ? "selected" : ""}>Ninguno</option>
+                    <option value="Administrador" ${user.role === "Administrador" ? "selected" : ""}>Administrador</option>
+                    <option value="Cobrador" ${user.role === "Cobrador" ? "selected" : ""}>Cobrador</option>
                     <option value="Propietario" ${user.role === "Propietario" ? "selected" : ""}>Propietario</option>
                     <option value="Conductor" ${user.role === "Conductor" ? "selected" : ""}>Conductor</option>
                     <option value="Secretario" ${user.role === "Secretario" ? "selected" : ""}>Secretario</option>
@@ -102,18 +97,9 @@ export function mostrarDatos() {
                 });
 
             });
-
-            const selectedValue = selectElement.value;
-            selectElement.dataset.oldValue = selectedValue;
-            selectElement.disabled = selectedValue === "12.00";
-            if (selectedValue === "12.00" || selectedValue === "Completado") {
-                selectElement.closest('div.flex-container').querySelector('span').style.color = "green";
-                selectElement.closest('div.flex-container').querySelector('span').style.fontWeight = "bold";
-            }
         });
 
         deleteRow(database, collection);
-        updatePagination(totalPages, mostrarDatos);
         addEditEventListeners(database, collection);
     });
 }
@@ -123,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
     mostrarDatos();
     initializeSearch(tabla);
-    initScrollButtons(tabla);
     includeHTML();
     changeRoleSelectEvent(tabla, database, collection);
     changeEstadoSelectEvent(tabla, database, collection);
